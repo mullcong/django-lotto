@@ -1,0 +1,15 @@
+{% extends "lotto/base.html" %}
+
+{% block content %}
+<h2>관리자 대시보드</h2>
+
+<p>총 판매 금액: {{ total_sales }}원</p>
+<p>총 판매 복권 수: {{ total_tickets }}장</p>
+<p>총 추첨 회차 수: {{ total_draws }}회</p>
+
+<hr>
+
+<a class="btn" href="{% url 'sales_history' %}">판매 내역 확인</a>
+<a class="btn" href="{% url 'draw_lotto' %}">추첨하기</a>
+<a class="btn" href="{% url 'winning_history' %}">당첨 내역 확인</a>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "lotto/base.html" %}
+
+{% block content %}
+<h2>당첨 확인</h2>
+
+<table>
+    <tr>
+        <th>회차</th>
+        <th>내 번호</th>
+        <th>결과</th>
+    </tr>
+
+    {% for item in results %}
+    <tr>
+        <td>{{ item.ticket.round_number }}</td>
+        <td>{{ item.ticket.numbers }}</td>
+        <td>{{ item.result }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">확인할 복권이 없습니다.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

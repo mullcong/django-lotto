@@ -1,0 +1,29 @@
+{% extends "lotto/base.html" %}
+
+{% block content %}
+<h2>당첨 내역</h2>
+
+<table>
+    <tr>
+        <th>사용자</th>
+        <th>회차</th>
+        <th>번호</th>
+        <th>결과</th>
+        <th>확인일</th>
+    </tr>
+
+    {% for history in histories %}
+    <tr>
+        <td>{{ history.ticket.user.username }}</td>
+        <td>{{ history.ticket.round_number }}</td>
+        <td>{{ history.ticket.numbers }}</td>
+        <td>{{ history.result }}</td>
+        <td>{{ history.checked_at }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">당첨 내역이 없습니다.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

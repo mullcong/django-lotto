@@ -1,0 +1,37 @@
+{% extends "lotto/base.html" %}
+
+{% block content %}
+<h2>로또 추첨</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">추첨하기</button>
+</form>
+
+<hr>
+
+<h3>추첨 결과 목록</h3>
+
+<table>
+    <tr>
+        <th>회차</th>
+        <th>당첨 번호</th>
+        <th>보너스 번호</th>
+        <th>추첨일</th>
+    </tr>
+
+    {% for draw in draws %}
+    <tr>
+        <td>{{ draw.round_number }}</td>
+        <td>{{ draw.numbers }}</td>
+        <td>{{ draw.bonus_number }}</td>
+        <td>{{ draw.created_at }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">추첨 결과가 없습니다.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

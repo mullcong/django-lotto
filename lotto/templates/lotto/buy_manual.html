@@ -1,0 +1,11 @@
+{% extends "lotto/base.html" %}
+
+{% block content %}
+<h2>수동 번호 구매</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">구매하기</button>
+</form>
+{% endblock %}

@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:15
+    container_name: lotto_db
+    restart: always
+    environment:
+      POSTGRES_DB: lotto_db
+      POSTGRES_USER: lotto_user
+      POSTGRES_PASSWORD: lotto_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: lotto_web
+    restart: always
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn lotto_project.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DB_NAME: lotto_db
+      DB_USER: lotto_user
+      DB_PASSWORD: lotto_pass
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
