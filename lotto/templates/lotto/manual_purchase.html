@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>수동 구매</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f5f6fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+        }
+
+        .container {
+            width: 650px;
+            background: white;
+            border-radius: 22px;
+            padding: 45px 45px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 16px;
+            font-size: 34px;
+            font-weight: 800;
+            color: #222;
+        }
+
+        .desc {
+            margin: 0 0 26px;
+            color: #555;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .numbers {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .number-item input {
+            display: none;
+        }
+
+        .number-item label {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #e0e0e0;
+            background: white;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            margin: 0 auto;
+        }
+
+        .number-item input:checked+label {
+            background: #4f7df3;
+            border-color: #4f7df3;
+            color: white;
+        }
+
+        .error {
+            color: #e53935;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            height: 58px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .blue {
+            background: #4f7df3;
+        }
+
+        .blue:hover {
+            background: #416ee0;
+        }
+
+        .gray {
+            background: #888;
+        }
+
+        .gray:hover {
+            background: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>수동 구매</h1>
+
+        <p class="desc">1부터 45까지 숫자 중 정확히 6개를 선택하세요.</p>
+
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="numbers">
+                <div class="number-item"><input type="checkbox" id="num1" name="numbers" value="1"><label
+                        for="num1">1</label></div>
+                <div class="number-item"><input type="checkbox" id="num2" name="numbers" value="2"><label
+                        for="num2">2</label></div>
+                <div class="number-item"><input type="checkbox" id="num3" name="numbers" value="3"><label
+                        for="num3">3</label></div>
+                <div class="number-item"><input type="checkbox" id="num4" name="numbers" value="4"><label
+                        for="num4">4</label></div>
+                <div class="number-item"><input type="checkbox" id="num5" name="numbers" value="5"><label
+                        for="num5">5</label></div>
+                <div class="number-item"><input type="checkbox" id="num6" name="numbers" value="6"><label
+                        for="num6">6</label></div>
+                <div class="number-item"><input type="checkbox" id="num7" name="numbers" value="7"><label
+                        for="num7">7</label></div>
+                <div class="number-item"><input type="checkbox" id="num8" name="numbers" value="8"><label
+                        for="num8">8</label></div>
+                <div class="number-item"><input type="checkbox" id="num9" name="numbers" value="9"><label
+                        for="num9">9</label></div>
+
+                <div class="number-item"><input type="checkbox" id="num10" name="numbers" value="10"><label
+                        for="num10">10</label></div>
+                <div class="number-item"><input type="checkbox" id="num11" name="numbers" value="11"><label
+                        for="num11">11</label></div>
+                <div class="number-item"><input type="checkbox" id="num12" name="numbers" value="12"><label
+                        for="num12">12</label></div>
+                <div class="number-item"><input type="checkbox" id="num13" name="numbers" value="13"><label
+                        for="num13">13</label></div>
+                <div class="number-item"><input type="checkbox" id="num14" name="numbers" value="14"><label
+                        for="num14">14</label></div>
+                <div class="number-item"><input type="checkbox" id="num15" name="numbers" value="15"><label
+                        for="num15">15</label></div>
+                <div class="number-item"><input type="checkbox" id="num16" name="numbers" value="16"><label
+                        for="num16">16</label></div>
+                <div class="number-item"><input type="checkbox" id="num17" name="numbers" value="17"><label
+                        for="num17">17</label></div>
+                <div class="number-item"><input type="checkbox" id="num18" name="numbers" value="18"><label
+                        for="num18">18</label></div>
+
+                <div class="number-item"><input type="checkbox" id="num19" name="numbers" value="19"><label
+                        for="num19">19</label></div>
+                <div class="number-item"><input type="checkbox" id="num20" name="numbers" value="20"><label
+                        for="num20">20</label></div>
+                <div class="number-item"><input type="checkbox" id="num21" name="numbers" value="21"><label
+                        for="num21">21</label></div>
+                <div class="number-item"><input type="checkbox" id="num22" name="numbers" value="22"><label
+                        for="num22">22</label></div>
+                <div class="number-item"><input type="checkbox" id="num23" name="numbers" value="23"><label
+                        for="num23">23</label></div>
+                <div class="number-item"><input type="checkbox" id="num24" name="numbers" value="24"><label
+                        for="num24">24</label></div>
+                <div class="number-item"><input type="checkbox" id="num25" name="numbers" value="25"><label
+                        for="num25">25</label></div>
+                <div class="number-item"><input type="checkbox" id="num26" name="numbers" value="26"><label
+                        for="num26">26</label></div>
+                <div class="number-item"><input type="checkbox" id="num27" name="numbers" value="27"><label
+                        for="num27">27</label></div>
+
+                <div class="number-item"><input type="checkbox" id="num28" name="numbers" value="28"><label
+                        for="num28">28</label></div>
+                <div class="number-item"><input type="checkbox" id="num29" name="numbers" value="29"><label
+                        for="num29">29</label></div>
+                <div class="number-item"><input type="checkbox" id="num30" name="numbers" value="30"><label
+                        for="num30">30</label></div>
+                <div class="number-item"><input type="checkbox" id="num31" name="numbers" value="31"><label
+                        for="num31">31</label></div>
+                <div class="number-item"><input type="checkbox" id="num32" name="numbers" value="32"><label
+                        for="num32">32</label></div>
+                <div class="number-item"><input type="checkbox" id="num33" name="numbers" value="33"><label
+                        for="num33">33</label></div>
+                <div class="number-item"><input type="checkbox" id="num34" name="numbers" value="34"><label
+                        for="num34">34</label></div>
+                <div class="number-item"><input type="checkbox" id="num35" name="numbers" value="35"><label
+                        for="num35">35</label></div>
+                <div class="number-item"><input type="checkbox" id="num36" name="numbers" value="36"><label
+                        for="num36">36</label></div>
+
+                <div class="number-item"><input type="checkbox" id="num37" name="numbers" value="37"><label
+                        for="num37">37</label></div>
+                <div class="number-item"><input type="checkbox" id="num38" name="numbers" value="38"><label
+                        for="num38">38</label></div>
+                <div class="number-item"><input type="checkbox" id="num39" name="numbers" value="39"><label
+                        for="num39">39</label></div>
+                <div class="number-item"><input type="checkbox" id="num40" name="numbers" value="40"><label
+                        for="num40">40</label></div>
+                <div class="number-item"><input type="checkbox" id="num41" name="numbers" value="41"><label
+                        for="num41">41</label></div>
+                <div class="number-item"><input type="checkbox" id="num42" name="numbers" value="42"><label
+                        for="num42">42</label></div>
+                <div class="number-item"><input type="checkbox" id="num43" name="numbers" value="43"><label
+                        for="num43">43</label></div>
+                <div class="number-item"><input type="checkbox" id="num44" name="numbers" value="44"><label
+                        for="num44">44</label></div>
+                <div class="number-item"><input type="checkbox" id="num45" name="numbers" value="45"><label
+                        for="num45">45</label></div>
+            </div>
+
+            <div class="menu">
+                <button type="submit" class="btn blue">구매하기</button>
+                <a href="{% url 'purchase' %}" class="btn gray">뒤로가기</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>

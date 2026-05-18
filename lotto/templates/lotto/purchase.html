@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>로또 구매</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f6fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background-color: white;
+            width: 420px;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            font-size: 30px;
+            color: #222;
+        }
+
+        .description {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .auto-box {
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px 0;
+            margin-top: 12px;
+            border-radius: 10px;
+            background-color: #4f7df3;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #3d68d8;
+        }
+
+        .btn-dark {
+            background-color: #333;
+        }
+
+        .btn-dark:hover {
+            background-color: #111;
+        }
+
+        .btn-gray {
+            background-color: #777;
+        }
+
+        .btn-gray:hover {
+            background-color: #555;
+        }
+
+        .message {
+            background-color: #ffe5e5;
+            color: #d63031;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .small-text {
+            font-size: 13px;
+            color: #777;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>로또 구매</h1>
+
+            <div class="description">
+                자동구매는 원하는 개수를 입력하면<br>
+                그 개수만큼 로또 번호가 랜덤으로 발급됩니다.
+            </div>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="message">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="auto-box">
+                <form method="post" action="{% url 'auto_purchase' %}">
+                    {% csrf_token %}
+
+                    <label for="count">자동구매 개수</label>
+                    <input type="number" id="count" name="count" min="1" max="10" value="1">
+
+                    <button type="submit" class="btn">자동구매</button>
+
+                    <div class="small-text">
+                        한 번에 최대 10장까지 구매할 수 있습니다.
+                    </div>
+                </form>
+            </div>
+
+            <a href="{% url 'manual_purchase' %}" class="btn btn-dark">수동구매</a>
+            <a href="{% url 'home' %}" class="btn btn-gray">메인으로 돌아가기</a>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+{% extends "lotto/base.html" %}
+
+{% block content %}
+<h1>번호 추첨</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <button class="btn admin" type="submit">당첨 번호 추첨하기</button>
+</form>
+
+{% if winning_numbers %}
+<div class="ticket">
+    <strong>추첨 결과</strong>
+    <div class="numbers">
+        {% for number in winning_numbers %}
+        {{ number }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<br>
+<a class="btn gray" href="{% url 'admin_home' %}">관리자 메뉴로</a>
+{% endblock %}

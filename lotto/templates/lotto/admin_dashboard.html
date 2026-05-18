@@ -1,15 +1,95 @@
-{% extends "lotto/base.html" %}
+<!DOCTYPE html>
+<html lang="ko">
 
-{% block content %}
-<h2>관리자 대시보드</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>6/45 Lotto Admin</title>
 
-<p>총 판매 금액: {{ total_sales }}원</p>
-<p>총 판매 복권 수: {{ total_tickets }}장</p>
-<p>총 추첨 회차 수: {{ total_draws }}회</p>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #222;
+        }
 
-<hr>
+        .container {
+            max-width: 900px;
+            margin: 80px auto;
+            padding: 40px;
+            text-align: center;
+        }
 
-<a class="btn" href="{% url 'sales_history' %}">판매 내역 확인</a>
-<a class="btn" href="{% url 'draw_lotto' %}">추첨하기</a>
-<a class="btn" href="{% url 'winning_history' %}">당첨 내역 확인</a>
-{% endblock %}
+        .title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #7a1f1f;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 50px;
+        }
+
+        .menu-box {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .menu-card {
+            width: 220px;
+            height: 140px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #7a1f1f;
+            font-size: 22px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
+            background: #fff0f0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 45px;
+            text-decoration: none;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .back-link:hover {
+            color: #7a1f1f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">6/45 Lotto Admin</div>
+        <div class="subtitle">관리자 메뉴를 선택하세요.</div>
+
+        <div class="menu-box">
+            <a href="{% url 'lotto:sales_history' %}" class="menu-card">판매내역 확인</a>
+            <a href="{% url 'lotto:draw_lotto' %}" class="menu-card">번호 추첨</a>
+            <a href="{% url 'lotto:winning_history' %}" class="menu-card">당첨 내역 확인</a>
+        </div>
+
+        <a href="{% url 'lotto:home' %}" class="back-link">← 메인으로 돌아가기</a>
+    </div>
+</body>
+
+</html>

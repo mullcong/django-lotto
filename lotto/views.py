@@ -1,144 +1,77 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib import messages
-from .models import LottoTicket, LottoDraw, WinningHistory
-from .forms import ManualLottoForm, AutoLottoForm, DrawLottoForm
 import random
 
+from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
 
-def is_admin(user):
-    return user.is_staff or user.is_superuser
+from .models import LottoTicket, LottoResult
 
 
 def home(request):
-    return render(request, "lotto/home.html")
+    return render(request, 'home.html')
 
 
-@login_required
-def buy_manual(request):
-    if request.method == "POST":
-        form = ManualLottoForm(request.POST)
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
 
         if form.is_valid():
-            numbers = sorted([
-                form.cleaned_data["number1"],
-                form.cleaned_data["number2"],
-                form.cleaned_data["number3"],
-                form.cleaned_data["number4"],
-                form.cleaned_data["number5"],
-                form.cleaned_data["number6"],
-            ])
-
-            LottoTicket.objects.create(
-                user=request.user,
-                round_number=form.cleaned_data["round_number"],
-                buy_type="manual",
-                number1=numbers[0],
-                number2=numbers[1],
-                number3=numbers[2],
-                number4=numbers[3],
-                number5=numbers[4],
-                number6=numbers[5],
-            )
-
-            messages.success(request, "수동 로또 구매가 완료되었습니다.")
-            return redirect("my_tickets")
+            user = form.save()
+            login(request, user)
+            return redirect('home')
     else:
-        form = ManualLottoForm()
+        form = UserCreationForm()
 
-    return render(request, "lotto/buy_manual.html", {"form": form})
+    return render(request, 'registration/signup.html', {
+        'form': form
+    })
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+
+
+def purchase(request):
+    return render(request, 'lotto/purchase.html')
 
 
 @login_required
-def buy_auto(request):
-    if request.method == "POST":
-        form = AutoLottoForm(request.POST)
+def auto_purchase(request):
+    if request.method == 'POST':
+        count = request.POST.get('count')
 
-        if form.is_valid():
-            numbers = LottoTicket.generate_auto_numbers()
+        try:
+            count = int(count)
+        except:
+            messages.error(request, '구매 개수를 숫자로 입력해주세요.')
+            return render(request, 'lotto/auto_purchase.html')
 
-            LottoTicket.objects.create(
+        if count < 1:
+            messages.error(request, '1개 이상 구매해야 합니다.')
+            return render(request, 'lotto/auto_purchase.html')
+
+        if count > 10:
+            messages.error(request, '한 번에 최대 10개까지만 구매할 수 있습니다.')
+            return render(request, 'lotto/auto_purchase.html')
+
+        last_result = LottoResult.objects.order_by('-round_number').first()
+
+        if last_result:
+            round_number = last_result.round_number + 1
+        else:
+            round_number = 1
+
+        purchased_tickets = []
+
+        for i in range(count):
+            numbers = random.sample(range(1, 46), 6)
+            numbers.sort()
+
+            ticket = LottoTicket.objects.create(
                 user=request.user,
-                round_number=form.cleaned_data["round_number"],
-                buy_type="auto",
-                number1=numbers[0],
-                number2=numbers[1],
-                number3=numbers[2],
-                number4=numbers[3],
-                number5=numbers[4],
-                number6=numbers[5],
-            )
-
-            messages.success(request, f"자동 번호 {numbers} 구매가 완료되었습니다.")
-            return redirect("my_tickets")
-    else:
-        form = AutoLottoForm()
-
-    return render(request, "lotto/buy_auto.html", {"form": form})
-
-
-@login_required
-def my_tickets(request):
-    tickets = LottoTicket.objects.filter(user=request.user).order_by("-created_at")
-    return render(request, "lotto/my_tickets.html", {"tickets": tickets})
-
-
-@login_required
-def check_result(request):
-    tickets = LottoTicket.objects.filter(user=request.user).order_by("-created_at")
-
-    results = []
-
-    for ticket in tickets:
-        result = ticket.check_result()
-
-        if result != "아직 추첨 전":
-            WinningHistory.objects.update_or_create(
-                ticket=ticket,
-                defaults={"result": result}
-            )
-
-        results.append({
-            "ticket": ticket,
-            "result": result,
-        })
-
-    return render(request, "lotto/check_result.html", {"results": results})
-
-
-@user_passes_test(is_admin)
-def admin_dashboard(request):
-    total_sales = LottoTicket.objects.count() * 1000
-    total_tickets = LottoTicket.objects.count()
-    total_draws = LottoDraw.objects.count()
-
-    context = {
-        "total_sales": total_sales,
-        "total_tickets": total_tickets,
-        "total_draws": total_draws,
-    }
-
-    return render(request, "lotto/admin_dashboard.html", context)
-
-
-@user_passes_test(is_admin)
-def draw_lotto(request):
-    if request.method == "POST":
-        form = DrawLottoForm(request.POST)
-
-        if form.is_valid():
-            round_number = form.cleaned_data["round_number"]
-
-            if LottoDraw.objects.filter(round_number=round_number).exists():
-                messages.error(request, "이미 해당 회차의 추첨 결과가 존재합니다.")
-                return redirect("draw_lotto")
-
-            numbers = sorted(random.sample(range(1, 46), 6))
-
-            remaining_numbers = list(set(range(1, 46)) - set(numbers))
-            bonus_number = random.choice(remaining_numbers)
-
-            LottoDraw.objects.create(
                 round_number=round_number,
                 number1=numbers[0],
                 number2=numbers[1],
@@ -146,46 +79,246 @@ def draw_lotto(request):
                 number4=numbers[3],
                 number5=numbers[4],
                 number6=numbers[5],
-                bonus_number=bonus_number,
             )
 
-            tickets = LottoTicket.objects.filter(round_number=round_number)
+            purchased_tickets.append(ticket)
 
-            for ticket in tickets:
-                result = ticket.check_result()
-                WinningHistory.objects.update_or_create(
-                    ticket=ticket,
-                    defaults={"result": result}
-                )
+        return render(request, 'lotto/purchase_complete.html', {
+            'tickets': purchased_tickets
+        })
 
-            messages.success(request, f"{round_number}회차 추첨이 완료되었습니다.")
-            return redirect("winning_history")
-    else:
-        form = DrawLottoForm()
+    return render(request, 'lotto/auto_purchase.html')
 
-    draws = LottoDraw.objects.all().order_by("-round_number")
 
-    return render(request, "lotto/draw_lotto.html", {
-        "form": form,
-        "draws": draws,
+@login_required
+def manual_purchase(request):
+    if request.method == 'POST':
+        selected_numbers = request.POST.getlist('numbers')
+
+        if len(selected_numbers) != 6:
+            messages.error(request, '번호는 정확히 6개를 선택해야 합니다.')
+            return render(request, 'lotto/manual_purchase.html')
+
+        try:
+            numbers = []
+
+            for number in selected_numbers:
+                numbers.append(int(number))
+
+        except:
+            messages.error(request, '잘못된 번호가 포함되어 있습니다.')
+            return render(request, 'lotto/manual_purchase.html')
+
+        if len(numbers) != len(set(numbers)):
+            messages.error(request, '중복된 번호는 선택할 수 없습니다.')
+            return render(request, 'lotto/manual_purchase.html')
+
+        for number in numbers:
+            if number < 1 or number > 45:
+                messages.error(request, '번호는 1부터 45까지만 선택할 수 있습니다.')
+                return render(request, 'lotto/manual_purchase.html')
+
+        numbers.sort()
+
+        last_result = LottoResult.objects.order_by('-round_number').first()
+
+        if last_result:
+            round_number = last_result.round_number + 1
+        else:
+            round_number = 1
+
+        ticket = LottoTicket.objects.create(
+            user=request.user,
+            round_number=round_number,
+            number1=numbers[0],
+            number2=numbers[1],
+            number3=numbers[2],
+            number4=numbers[3],
+            number5=numbers[4],
+            number6=numbers[5],
+        )
+
+        return render(request, 'lotto/purchase_complete.html', {
+            'ticket': ticket
+        })
+
+    return render(request, 'lotto/manual_purchase.html')
+
+
+@login_required
+def purchase_complete(request):
+    return render(request, 'lotto/purchase_complete.html')
+
+
+@login_required
+def my_tickets(request):
+    tickets = LottoTicket.objects.filter(user=request.user).order_by('-round_number', '-id')
+
+    lotto_results = LottoResult.objects.all()
+
+    result_map = {}
+
+    for result in lotto_results:
+        result_map[result.round_number] = [
+            result.number1,
+            result.number2,
+            result.number3,
+            result.number4,
+            result.number5,
+            result.number6,
+        ]
+
+    grouped_map = {}
+
+    for ticket in tickets:
+        ticket_numbers = [
+            ticket.number1,
+            ticket.number2,
+            ticket.number3,
+            ticket.number4,
+            ticket.number5,
+            ticket.number6,
+        ]
+
+        winning_numbers = result_map.get(ticket.round_number, [])
+
+        number_list = []
+
+        for number in ticket_numbers:
+            if number in winning_numbers:
+                number_list.append({
+                    'value': number,
+                    'matched': True
+                })
+            else:
+                number_list.append({
+                    'value': number,
+                    'matched': False
+                })
+
+        if ticket.round_number not in grouped_map:
+            grouped_map[ticket.round_number] = {
+                'round_number': ticket.round_number,
+                'winning_numbers': winning_numbers,
+                'tickets': []
+            }
+
+        grouped_map[ticket.round_number]['tickets'].append({
+            'id': ticket.id,
+            'created_at': ticket.created_at,
+            'numbers': number_list
+        })
+
+    grouped_tickets = list(grouped_map.values())
+
+    return render(request, 'lotto/my_tickets.html', {
+        'grouped_tickets': grouped_tickets
     })
+
+
+def is_admin(user):
+    return user.is_staff
+
+
+@user_passes_test(is_admin)
+def lotto_admin_home(request):
+    return render(request, 'lotto/lotto_admin_home.html')
 
 
 @user_passes_test(is_admin)
 def sales_history(request):
-    tickets = LottoTicket.objects.all().order_by("-created_at")
-    total_sales = tickets.count() * 1000
+    tickets = LottoTicket.objects.all().order_by('-round_number', '-id')
 
-    return render(request, "lotto/sales_history.html", {
-        "tickets": tickets,
-        "total_sales": total_sales,
+    return render(request, 'lotto/sales_history.html', {
+        'tickets': tickets
     })
 
 
 @user_passes_test(is_admin)
-def winning_history(request):
-    histories = WinningHistory.objects.all().order_by("-checked_at")
+def draw_lotto(request):
+    if request.method == 'POST':
+        last_result = LottoResult.objects.order_by('-round_number').first()
 
-    return render(request, "lotto/winning_history.html", {
-        "histories": histories,
+        if last_result:
+            round_number = last_result.round_number + 1
+        else:
+            round_number = 1
+
+        numbers = random.sample(range(1, 46), 6)
+        numbers.sort()
+
+        result = LottoResult.objects.create(
+            round_number=round_number,
+            number1=numbers[0],
+            number2=numbers[1],
+            number3=numbers[2],
+            number4=numbers[3],
+            number5=numbers[4],
+            number6=numbers[5],
+        )
+
+        return render(request, 'lotto/draw_result.html', {
+            'result': result,
+            'numbers': numbers
+        })
+
+    return render(request, 'lotto/draw_lotto.html')
+
+
+@user_passes_test(is_admin)
+def winning_history(request):
+    results = LottoResult.objects.all().order_by('-round_number')
+
+    return render(request, 'lotto/winning_history.html', {
+        'results': results
+    })
+
+
+@login_required
+def check_result(request):
+    tickets = LottoTicket.objects.filter(user=request.user).order_by('-round_number', '-id')
+    results = LottoResult.objects.all()
+
+    result_map = {}
+
+    for result in results:
+        result_map[result.round_number] = [
+            result.number1,
+            result.number2,
+            result.number3,
+            result.number4,
+            result.number5,
+            result.number6,
+        ]
+
+    checked_tickets = []
+
+    for ticket in tickets:
+        ticket_numbers = [
+            ticket.number1,
+            ticket.number2,
+            ticket.number3,
+            ticket.number4,
+            ticket.number5,
+            ticket.number6,
+        ]
+
+        winning_numbers = result_map.get(ticket.round_number, [])
+
+        matched_numbers = []
+
+        for number in ticket_numbers:
+            if number in winning_numbers:
+                matched_numbers.append(number)
+
+        checked_tickets.append({
+            'ticket': ticket,
+            'numbers': ticket_numbers,
+            'winning_numbers': winning_numbers,
+            'matched_numbers': matched_numbers,
+            'match_count': len(matched_numbers),
+        })
+
+    return render(request, 'lotto/check_result.html', {
+        'checked_tickets': checked_tickets
     })

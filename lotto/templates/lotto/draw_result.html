@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>당첨 내역 확인</title>
+    <title>추첨 결과</title>
     <style>
         * {
             box-sizing: border-box;
@@ -17,37 +17,36 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 0;
         }
 
         .container {
-            width: 760px;
+            width: 600px;
             background: white;
             border-radius: 22px;
-            padding: 50px 45px;
+            padding: 55px 45px;
             box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
             text-align: center;
         }
 
         h1 {
-            margin: 0 0 30px;
+            margin: 0 0 24px;
             font-size: 34px;
             font-weight: 800;
             color: #222;
-        }
-
-        .result {
-            background: #f5f6fa;
-            border-radius: 16px;
-            padding: 22px;
-            margin-bottom: 16px;
         }
 
         .round {
             font-size: 18px;
             font-weight: 800;
             color: #222;
-            margin-bottom: 14px;
+            margin-bottom: 20px;
+        }
+
+        .result-box {
+            background: #f5f6fa;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
         }
 
         .balls {
@@ -58,30 +57,28 @@
         }
 
         .ball {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             background: #4f7df3;
             color: white;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 800;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .empty {
-            color: #555;
-            font-size: 17px;
-            font-weight: 600;
-            margin: 35px 0;
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
         }
 
         .btn {
             width: 100%;
             height: 58px;
             border-radius: 12px;
-            background: #888;
             color: white;
             font-size: 18px;
             font-weight: 700;
@@ -89,10 +86,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 28px;
         }
 
-        .btn:hover {
+        .blue {
+            background: #4f7df3;
+        }
+
+        .blue:hover {
+            background: #416ee0;
+        }
+
+        .gray {
+            background: #888;
+        }
+
+        .gray:hover {
             background: #777;
         }
     </style>
@@ -101,12 +109,10 @@
 <body>
 
     <div class="container">
-        <h1>당첨 내역 확인</h1>
+        <h1>추첨 결과</h1>
 
-        {% if results %}
-        {% for result in results %}
-        <div class="result">
-            <div class="round">{{ result.round_number }}회차</div>
+        <div class="result-box">
+            <div class="round">{{ result.round_number }}회차 당첨 번호</div>
 
             <div class="balls">
                 <div class="ball">{{ result.number1 }}</div>
@@ -117,12 +123,11 @@
                 <div class="ball">{{ result.number6 }}</div>
             </div>
         </div>
-        {% endfor %}
-        {% else %}
-        <p class="empty">당첨 내역이 없습니다.</p>
-        {% endif %}
 
-        <a href="{% url 'lotto_admin_home' %}" class="btn">관리자 메인으로</a>
+        <div class="menu">
+            <a href="{% url 'winning_history' %}" class="btn blue">당첨 내역 확인</a>
+            <a href="{% url 'lotto_admin_home' %}" class="btn gray">관리자 메인으로</a>
+        </div>
     </div>
 
 </body>

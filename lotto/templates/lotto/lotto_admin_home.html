@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>6/45 Lotto Admin</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #f5f6fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 500px;
+            margin: 100px auto;
+            background-color: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+            font-size: 34px;
+            color: #222;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .btn {
+            display: block;
+            padding: 15px;
+            background-color: #4f7df3;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #345fd1;
+        }
+
+        .back-btn {
+            margin-top: 30px;
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .back-btn:hover {
+            background-color: #111;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>6/45 Lotto Admin</h1>
+
+        <div class="menu">
+            <a href="{% url 'sales_history' %}" class="btn">판매내역 확인</a>
+            <a href="{% url 'draw_lotto' %}" class="btn">번호 추첨</a>
+            <a href="{% url 'winning_history' %}" class="btn">당첨 내역 확인</a>
+        </div>
+
+        <a href="{% url 'home' %}" class="back-btn">메인으로 돌아가기</a>
+    </div>
+
+</body>
+
+</html>

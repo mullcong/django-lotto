@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>구매 완료</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f6fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 60px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background-color: white;
+            width: 650px;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+            font-size: 30px;
+            color: #222;
+        }
+
+        .message {
+            font-size: 17px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .ticket-box {
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 18px;
+            background-color: #fafafa;
+            text-align: left;
+        }
+
+        .ticket-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 15px;
+        }
+
+        .numbers {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .number {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: #4f7df3;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px 0;
+            margin-top: 15px;
+            border-radius: 10px;
+            background-color: #4f7df3;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #3d68d8;
+        }
+
+        .btn-dark {
+            background-color: #333;
+        }
+
+        .btn-dark:hover {
+            background-color: #111;
+        }
+
+        .btn-gray {
+            background-color: #777;
+        }
+
+        .btn-gray:hover {
+            background-color: #555;
+        }
+
+        .empty-message {
+            color: #555;
+            font-size: 16px;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>구매 완료</h1>
+
+            {% if tickets %}
+            <div class="message">
+                로또 {{ count }}장이 구매되었습니다.
+            </div>
+
+            {% for item in tickets %}
+            <div class="ticket-box">
+                <div class="ticket-title">
+                    {{ item.ticket.round_number }}회차 복권
+                </div>
+
+                <div class="numbers">
+                    {% for number in item.numbers %}
+                    <span class="number">{{ number }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-message">
+                구매된 복권 정보가 없습니다.
+            </div>
+            {% endif %}
+
+            <a href="{% url 'my_tickets' %}" class="btn">내 복권 보기</a>
+            <a href="{% url 'purchase' %}" class="btn btn-dark">추가 구매하기</a>
+            <a href="{% url 'home' %}" class="btn btn-gray">메인으로 돌아가기</a>
+        </div>
+    </div>
+</body>
+
+</html>

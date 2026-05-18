@@ -1,33 +1,133 @@
-{% extends "lotto/base.html" %}
+<!DOCTYPE html>
+<html lang="ko">
 
-{% block content %}
-<h2>판매 내역</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>판매내역 확인</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-<p>총 판매 금액: {{ total_sales }}원</p>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f5f6fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+        }
 
-<table>
-    <tr>
-        <th>사용자</th>
-        <th>회차</th>
-        <th>구매 방식</th>
-        <th>번호</th>
-        <th>가격</th>
-        <th>구매일</th>
-    </tr>
+        .container {
+            width: 760px;
+            background: white;
+            border-radius: 22px;
+            padding: 50px 45px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
 
-    {% for ticket in tickets %}
-    <tr>
-        <td>{{ ticket.user.username }}</td>
-        <td>{{ ticket.round_number }}</td>
-        <td>{{ ticket.get_buy_type_display }}</td>
-        <td>{{ ticket.numbers }}</td>
-        <td>{{ ticket.price }}원</td>
-        <td>{{ ticket.created_at }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="6">판매 내역이 없습니다.</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endblock %}
+        h1 {
+            margin: 0 0 30px;
+            font-size: 34px;
+            font-weight: 800;
+            color: #222;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 14px;
+            margin-bottom: 28px;
+        }
+
+        th {
+            background: #4f7df3;
+            color: white;
+            height: 48px;
+            font-size: 15px;
+        }
+
+        td {
+            background: #f5f6fa;
+            height: 48px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 8px solid white;
+        }
+
+        .empty {
+            color: #555;
+            font-size: 17px;
+            font-weight: 600;
+            margin: 35px 0;
+        }
+
+        .btn {
+            width: 100%;
+            height: 58px;
+            border-radius: 12px;
+            background: #888;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            background: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>판매내역 확인</h1>
+
+        {% if tickets %}
+        <table>
+            <thead>
+                <tr>
+                    <th>회차</th>
+                    <th>구매자</th>
+                    <th>번호</th>
+                    <th>구매일</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.round_number }}</td>
+                    <td>{{ ticket.user.username }}</td>
+                    <td>
+                        {{ ticket.number1 }},
+                        {{ ticket.number2 }},
+                        {{ ticket.number3 }},
+                        {{ ticket.number4 }},
+                        {{ ticket.number5 }},
+                        {{ ticket.number6 }}
+                    </td>
+                    <td>{{ ticket.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty">판매 내역이 없습니다.</p>
+        {% endif %}
+
+        <a href="{% url 'lotto_admin_home' %}" class="btn">관리자 메인으로</a>
+    </div>
+
+</body>
+
+</html>

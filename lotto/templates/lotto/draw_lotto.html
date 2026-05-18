@@ -1,37 +1,103 @@
-{% extends "lotto/base.html" %}
+<!DOCTYPE html>
+<html lang="ko">
 
-{% block content %}
-<h2>로또 추첨</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>번호 추첨</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">추첨하기</button>
-</form>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f5f6fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-<hr>
+        .container {
+            width: 600px;
+            background: white;
+            border-radius: 22px;
+            padding: 55px 45px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
 
-<h3>추첨 결과 목록</h3>
+        h1 {
+            margin: 0 0 22px;
+            font-size: 34px;
+            font-weight: 800;
+            color: #222;
+        }
 
-<table>
-    <tr>
-        <th>회차</th>
-        <th>당첨 번호</th>
-        <th>보너스 번호</th>
-        <th>추첨일</th>
-    </tr>
+        .desc {
+            color: #555;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 28px;
+        }
 
-    {% for draw in draws %}
-    <tr>
-        <td>{{ draw.round_number }}</td>
-        <td>{{ draw.numbers }}</td>
-        <td>{{ draw.bonus_number }}</td>
-        <td>{{ draw.created_at }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="4">추첨 결과가 없습니다.</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endblock %}
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            height: 58px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .blue {
+            background: #4f7df3;
+        }
+
+        .blue:hover {
+            background: #416ee0;
+        }
+
+        .gray {
+            background: #888;
+        }
+
+        .gray:hover {
+            background: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>번호 추첨</h1>
+
+        <p class="desc">버튼을 누르면 이번 회차 당첨 번호가 추첨됩니다.</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="menu">
+                <button type="submit" class="btn blue">추첨하기</button>
+                <a href="{% url 'lotto_admin_home' %}" class="btn gray">관리자 메인으로</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>

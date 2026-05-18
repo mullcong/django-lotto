@@ -1,0 +1,12 @@
+{% extends "lotto/base.html" %}
+
+{% block content %}
+<h1>6/45 Lotto Admin</h1>
+
+<div class="menu">
+    <a class="btn admin" href="{% url 'sales_history' %}">판매내역 확인</a>
+    <a class="btn admin" href="{% url 'draw_number' %}">번호 추첨</a>
+    <a class="btn admin" href="{% url 'winning_history' %}">당첨 내역 확인</a>
+    <a class="btn gray" href="{% url 'home' %}">메인으로</a>
+</div>
+{% endblock %}

@@ -1,11 +1,17 @@
 {% extends "lotto/base.html" %}
 
 {% block content %}
-<h2>수동 번호 구매</h2>
+<h1>수동구매</h1>
+
+<p>1부터 45까지 숫자 중 정확히 6개를 선택하세요.</p>
 
 <form method="post">
     {% csrf_token %}
+
     {{ form.as_p }}
-    <button type="submit">구매하기</button>
+
+    <button type="submit">로또 구매</button>
 </form>
+
+<a href="{% url 'purchase' %}">뒤로가기</a>
 {% endblock %}

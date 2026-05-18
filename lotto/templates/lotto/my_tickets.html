@@ -1,29 +1,215 @@
-{% extends "lotto/base.html" %}
+<!DOCTYPE html>
+<html lang="ko">
 
-{% block content %}
-<h2>내 복권 목록</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>내 복권</title>
 
-<table>
-    <tr>
-        <th>회차</th>
-        <th>구매 방식</th>
-        <th>번호</th>
-        <th>가격</th>
-        <th>구매일</th>
-    </tr>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f6fa;
+            font-family: Arial, sans-serif;
+        }
 
-    {% for ticket in tickets %}
-    <tr>
-        <td>{{ ticket.round_number }}</td>
-        <td>{{ ticket.get_buy_type_display }}</td>
-        <td>{{ ticket.numbers }}</td>
-        <td>{{ ticket.price }}원</td>
-        <td>{{ ticket.created_at }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="5">구매한 복권이 없습니다.</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endblock %}
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 60px auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #222;
+        }
+
+        .round-box {
+            margin-bottom: 35px;
+            padding: 25px;
+            border-radius: 16px;
+            background-color: #f8f9fc;
+            border: 1px solid #e1e4ea;
+            text-align: left;
+        }
+
+        .round-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .winning-numbers {
+            margin-bottom: 20px;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .winning-number {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #333;
+            color: white;
+            font-weight: bold;
+            margin: 3px;
+            font-size: 14px;
+        }
+
+        .ticket-card {
+            background-color: white;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ticket-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .number {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: #4f7df3;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .number.matched {
+            background-color: #ff4d4d;
+        }
+
+        .no-result {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .empty {
+            color: #777;
+            font-size: 18px;
+            margin: 40px 0;
+        }
+
+        .btn-area {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .main-btn {
+            background-color: #4f7df3;
+            color: white;
+        }
+
+        .sub-btn {
+            background-color: #333;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>내 복권</h1>
+
+        {% if grouped_tickets %}
+
+        {% for group in grouped_tickets %}
+        <div class="round-box">
+
+            <div class="round-title">
+                {{ group.round_number }}회차
+            </div>
+
+            {% if group.winning_numbers %}
+            <div class="winning-numbers">
+                추첨 번호:
+                {% for number in group.winning_numbers %}
+                <span class="winning-number">{{ number }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="winning-numbers no-result">
+                아직 이 회차의 추첨 번호가 없습니다.
+            </div>
+            {% endif %}
+
+            {% for ticket in group.tickets %}
+            <div class="ticket-card">
+                <div class="ticket-title">
+                    복권 번호
+                </div>
+
+                <div class="numbers">
+                    {% for number in ticket.numbers %}
+
+                    {% if number.matched %}
+                    <div class="number matched">
+                        {{ number.value }}
+                    </div>
+                    {% else %}
+                    <div class="number">
+                        {{ number.value }}
+                    </div>
+                    {% endif %}
+
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+        {% endfor %}
+
+        {% else %}
+
+        <div class="empty">
+            아직 구매한 복권이 없습니다.
+        </div>
+
+        {% endif %}
+
+        <div class="btn-area">
+            <a href="{% url 'purchase' %}" class="btn main-btn">로또 구매하기</a>
+            <a href="{% url 'home' %}" class="btn sub-btn">메인으로 돌아가기</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

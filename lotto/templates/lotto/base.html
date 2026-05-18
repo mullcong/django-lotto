@@ -4,105 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <title>6/45 Lotto</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f7f7f7;
-        }
-
-        header {
-            background-color: #222;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        nav a {
-            color: white;
-            margin-right: 15px;
-            text-decoration: none;
-        }
-
-        main {
-            background-color: white;
-            margin-top: 20px;
-            padding: 25px;
-            border-radius: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #eee;
-        }
-
-        button,
-        .btn {
-            background-color: #222;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        input {
-            padding: 8px;
-            margin: 5px;
-        }
-
-        .message {
-            background-color: #fff3cd;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-    </style>
 </head>
 
 <body>
 
-    <header>
-        <h1>6/45 Lotto 웹 사이트</h1>
+    {% block content %}
+    {% endblock %}
 
-        <nav>
-            <a href="{% url 'home' %}">홈</a>
-            <a href="{% url 'buy_manual' %}">수동 구매</a>
-            <a href="{% url 'buy_auto' %}">자동 구매</a>
-            <a href="{% url 'my_tickets' %}">내 복권</a>
-            <a href="{% url 'check_result' %}">당첨 확인</a>
-
-            {% if user.is_staff %}
-            <a href="{% url 'admin_dashboard' %}">관리자 페이지</a>
-            {% endif %}
-
-            <a href="/admin/">Django Admin</a>
-        </nav>
-    </header>
-
-    <main>
-        {% if messages %}
-        {% for message in messages %}
-        <div class="message">{{ message }}</div>
-        {% endfor %}
-        {% endif %}
-
-        {% block content %}
-        {% endblock %}
-    </main>
+    {% if messages %}
+    {% for message in messages %}
+    <script>
+        alert("{{ message }}");
+    </script>
+    {% endfor %}
+    {% endif %}
 
 </body>
 
